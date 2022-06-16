@@ -83,9 +83,9 @@ function add_signaling_handlers(socket) {
   //               messages 'created', 'joined', 'full'.
   //               For all three messages, simply write a console log.
   socket.on("created", () => console.log("created"));
-  socket.on("joined", () => {
+  socket.on("joined", (room) => {
     console.log("joined");
-    handle_new_peer();
+    handle_new_peer(room);
   });
   socket.on("full", () => console.log("full"));
 
@@ -218,8 +218,6 @@ async function handle_local_icecandidate(event) {
     const offer = peerConnection.localDescription;
     console.log("Sending invite with offer = ", offer);
     socket.emit('invite', offer);
-  } else {
-    console.log("Received candidate: ", event.candidate);
   }
 }
 
@@ -245,7 +243,6 @@ async function handle_remote_icecandidate(candidate) {
 function handle_remote_track(event) {
   console.log('Received remote track: ', event);
   // *** TODO ***: get the first stream of the event and show it in remoteVideo
-  // FIXME: POURQUOI EST-CE QUE event.streams EST VIDE ?
   document.getElementById('remoteVideo').srcObject = event.streams[0]
 }
 
